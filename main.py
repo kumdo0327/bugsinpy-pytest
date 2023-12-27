@@ -13,7 +13,7 @@ def discover_pytest_cases(directory):
             if is_test_file(file):
                 file_path = os.path.join(root, file)
                 module_name = os.path.splitext(file_path)[0].replace(os.sep, ".")
-                with open(file_path, 'r') as f:
+                with open(file_path, 'r', encoding='utf-8') as f:
                     for line in f:
                         if line.strip().startswith("def test_"):
                             function_name = line.split("(")[0].split()[1]
