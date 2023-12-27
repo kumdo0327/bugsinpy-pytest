@@ -15,13 +15,14 @@ def find_test_files(directory):
 def extract_test_functions(file_path):
     # Extract test function names from a test file
     test_functions = []
-    print(file_path)
     try:
         with open(file_path, 'r') as file:
             content = file.read()
             test_functions = re.findall(r'def (test_\w+)', content)
     except UnicodeDecodeError:
-        pass
+        print('-------------------------------------------------------------------')
+        print(file_path)
+        print('-------------------------------------------------------------------')
     return test_functions
 
 def run_pytest(test_file, test_function):
