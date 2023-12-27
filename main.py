@@ -13,12 +13,30 @@ def discover_pytest_cases(directory):
             if is_test_file(file):
                 file_path = os.path.join(root, file)
                 module_name = os.path.splitext(file_path)[0].replace(os.sep, ".")
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    for line in f:
-                        if line.strip().startswith("def test_"):
-                            function_name = line.split("(")[0].split()[1]
-                            test_cases.append(f"{module_name}::{function_name}")
+
+                try:
+                    with open(file_path, 'r', encoding='ascii') as f:
+                        for line in f:
+                            if line.strip().startswith("def test_"):
+                                function_name = line.split("(")[0].split()[1]
+                                test_cases.append(f"{module_name}::{function_name}")
+                except UnicodeDecodeError:
+                    try:
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            for line in f:
+                                if line.strip().startswith("def test_"):
+                                    function_name = line.split("(")[0].split()[1]
+                                    test_cases.append(f"{module_name}::{function_name}")
+                    except UnicodeDecodeError:
+                        with open(file_path, 'r', encoding='cp949') as f:
+                            for line in f:
+                                if line.strip().startswith("def test_"):
+                                    function_name = line.split("(")[0].split()[1]
+                                    test_cases.append(f"{module_name}::{function_name}")
+                    
     return test_cases
+
+
 
 def run_tests(test_dir):
     test_cases = discover_pytest_cases(test_dir)
