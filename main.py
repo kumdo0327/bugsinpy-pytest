@@ -1,41 +1,43 @@
-import unittest
 import subprocess
 import sys
+import pytest
+from _pytest.config import Config
+from _pytest.config.argparsing import Parser
+from _pytest.main import Session
+from _pytest.nodes import Item
 
-global_counter = 1
+def collect_tests(test_dir):
+    # Configuring pytest
+    config = Config()
+    parser = Parser()
+    config._parser = parser
+    config.parse([test_dir])
 
-def format_testcase(input_string):
-    parts = input_string.split(" (")
-    test_method = parts[0]
-    test_class = parts[1].rstrip(")")
-    arg = sys.argv[1]
+    # Creating a session
+    session = Session(config)
+    session.perform_collect()
 
-    transformed_string = f"{arg}/{test_class}.{test_method}"
-    return transformed_string
+    # Collecting test items
+    return session.items
 
-def subcall(suite):
-    if hasattr(suite, '__iter__'):
-        for x in suite:
-            subcall(x)
-    else:
-        global global_counter
+def run_test(test_item):
+    # Running an individual test
+    return pytest.main(['-k', test_item.name])
 
-        print(suite)
-        #testcase = format_testcase(str(suite))
-        #print(testcase)
-        """subprocess.call(['coverage', 'run', '-m', 'unittest', '-q', testcase])
-        subprocess.call(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit=test/*.py'])
+def run_tests(test_dir):
+    # Collect tests
+    test_items = collect_tests(test_dir)
 
-        result = suite.run()
-        with open(f'coverage/{global_counter}/{global_counter}.output', 'w') as f:
-            for _, traceback in result.errors:
-                f.write(traceback)
-        with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
-            f.write('passed' if result.wasSuccessful() else 'failed')
+    # Execute tests individually
+    for item in test_items:
+        print(f"Running test: {item.name}")
+        result = run_test(item)
+        if result == 0:
+            print(f"Test {item.name} passed")
+        else:
+            print(f"Test {item.name} failed")
 
-        global_counter += 1"""
-
-
-
-if __name__ == '__main__':
-    subcall(unittest.defaultTestLoader.discover(sys.argv[1], pattern='*test*.py'))
+if __name__ == "__main__":
+    # Directory containing tests
+    test_dir = "./tests"
+    run_tests(test_dir)
