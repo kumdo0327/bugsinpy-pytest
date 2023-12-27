@@ -20,16 +20,13 @@ def extract_test_functions(file_path):
             content = file.read()
             test_functions = re.findall(r'def (test_\w+)', content)
     except UnicodeDecodeError:
-        print('-------------------------------------------------------------------')
         print(file_path)
-        print('-------------------------------------------------------------------')
     return test_functions
 
 def run_pytest(test_file, test_function):
     """Run a single test case using pytest."""
 
     cmd = f'pytest {test_file}::{test_function}'
-    print(cmd)
     #subprocess.run(cmd, shell=True)
 
 def main():
