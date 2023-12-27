@@ -2,6 +2,9 @@ import sys
 import os
 import re
 import subprocess
+import pytest
+
+global_counter = 1
 
 def find_test_files(directory):
     # Find all test files in the given directory
@@ -24,14 +27,24 @@ def extract_test_functions(file_path):
     return test_functions
 
 def run_pytest(test_file, test_function):
-    """Run a single test case using pytest."""
+    # Run a single test case using pytest
+    global global_counter
 
-    cmd = f'pytest {test_file}::{test_function}'
-    #subprocess.run(cmd, shell=True)
+    subprocess.call(['coverage', 'run', '-m', 'pytest', f'{test_file}::{test_function}'])
+    subprocess.call(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', f'--omit={sys.argv[1]}/*.py'])
+
+    _, exitcode = pytest.main([f'{test_file}::{test_function}'])
+    with open(f'coverage/{global_counter}/{global_counter}.output', 'w') as f:
+        pass
+    with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
+        f.write('passed' if exitcode == 0 else 'failed')
+
+    global_counter += 1
+
+
 
 def main():
-    test_directory = sys.argv[1]
-    test_files = find_test_files(test_directory)
+    test_files = find_test_files(sys.argv[1])
 
     for test_file in test_files:
         test_functions = extract_test_functions(test_file)
