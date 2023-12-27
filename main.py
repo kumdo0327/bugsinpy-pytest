@@ -20,8 +20,9 @@ def subcall(suite):
     else:
         global global_counter
 
-        testcase = format_testcase(str(suite))
-        print(testcase)
+        print(suite)
+        #testcase = format_testcase(str(suite))
+        #print(testcase)
         """subprocess.call(['coverage', 'run', '-m', 'unittest', '-q', testcase])
         subprocess.call(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit=test/*.py'])
 
