@@ -38,4 +38,4 @@ def subcall(suite):
 
 
 if __name__ == '__main__':
-    subcall(unittest.defaultTestLoader.discover(sys.argv[1]))
+    subcall(unittest.defaultTestLoader.discover(sys.argv[1], pattern='*test*.py'))
