@@ -22,11 +22,13 @@ def extract_test_functions(file_path):
 
 def run_pytest(test_file, test_function):
     """Run a single test case using pytest."""
+
     cmd = f'pytest {test_file}::{test_function}'
-    subprocess.run(cmd, shell=True)
+    print(cmd)
+    #subprocess.run(cmd, shell=True)
 
 def main():
-    test_directory = 'path/to/your/tests'  # Replace with the path to your test directory
+    test_directory = './tests'  # Replace with the path to your test directory
     test_files = find_test_files(test_directory)
 
     for test_file in test_files:
