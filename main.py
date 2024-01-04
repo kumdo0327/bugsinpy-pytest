@@ -31,14 +31,17 @@ def run_pytest(test_function):
     subprocess.call(['coverage', 'run', '-m', 'pytest', test_function])
     subprocess.call(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', f'--omit={sys.argv[1]}/*.py'])
 
+    #with open(f'coverage/{global_counter}/{global_counter}.output', 'w') as f:
+    #    pass
     exitcode = pytest.main([test_function])
-    with open(f'coverage/{global_counter}/{global_counter}.output', 'w') as f:
-        pass
-    with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
-        f.write('passed' if exitcode is pytest.ExitCode.OK else 'failed')
-
-    global_counter += 1
-
+    if exitcode is pytest.ExitCode.OK:
+        with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
+            f.write('passed')
+        global_counter += 1
+    elif exitcode is pytest.ExitCode.TESTS_FAILED:
+        with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
+            f.write('failed')
+        global_counter += 1
 
 
 def main():
