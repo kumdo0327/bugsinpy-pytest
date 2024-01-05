@@ -35,6 +35,7 @@ def run_pytest(test_function):
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
             f.write('passed')
         global_counter += 1
+        return
     
     elif exitcode is pytest.ExitCode.TESTS_FAILED:
         subprocess.call(['coverage', 'run', '-m', 'pytest', test_function])
@@ -42,6 +43,7 @@ def run_pytest(test_function):
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
             f.write('failed')
         global_counter += 1
+        return
 
 
 def main():
