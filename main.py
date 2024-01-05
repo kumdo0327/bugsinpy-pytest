@@ -28,6 +28,7 @@ def run_pytest(test_function):
     global global_counter
     print(test_function)
     exitcode = pytest.main([test_function])
+    print(exitcode)
 
     if exitcode is pytest.ExitCode.OK:
         subprocess.call(['coverage', 'run', '-m', 'pytest', test_function])
