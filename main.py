@@ -26,9 +26,9 @@ def extract_test_functions(path):
 def run_pytest(test_function):
     # Run a single test case using pytest
     global global_counter
-    print(test_function)
+    print(f"Testing... >>> {test_function}")
     exitcode = pytest.main([test_function])
-    print(exitcode)
+    print(f"ExitCode is {exitcode}")
 
     if exitcode == 0:
         subprocess.call(['coverage', 'run', '-m', 'pytest', test_function])
@@ -36,7 +36,6 @@ def run_pytest(test_function):
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
             f.write('passed')
         global_counter += 1
-        return
     
     elif exitcode == 1:
         subprocess.call(['coverage', 'run', '-m', 'pytest', test_function])
@@ -44,7 +43,6 @@ def run_pytest(test_function):
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
             f.write('failed')
         global_counter += 1
-        return
 
 
 def main():
