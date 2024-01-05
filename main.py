@@ -30,7 +30,7 @@ def run_pytest(test_function):
     exitcode = pytest.main([test_function])
     print(exitcode)
 
-    if exitcode is pytest.ExitCode.OK:
+    if exitcode == 0:
         subprocess.call(['coverage', 'run', '-m', 'pytest', test_function])
         subprocess.call(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', f'--omit={sys.argv[1]}/*.py'])
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
@@ -38,7 +38,7 @@ def run_pytest(test_function):
         global_counter += 1
         return
     
-    elif exitcode is pytest.ExitCode.TESTS_FAILED:
+    elif exitcode == 1:
         subprocess.call(['coverage', 'run', '-m', 'pytest', test_function])
         subprocess.call(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', f'--omit={sys.argv[1]}/*.py'])
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
