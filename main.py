@@ -46,9 +46,6 @@ def run_pytest(test_function):
 
 
 def main():
-    if not os.path.exists('coverage'):
-        os.makedirs('coverage')
-
     test_functions = extract_test_functions(sys.argv[1])
     for test_function in test_functions:
         run_pytest(test_function)
