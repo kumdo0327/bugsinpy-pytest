@@ -20,7 +20,7 @@ class SkipAlarmPlugin:
         self.map = {nodeid : str() for nodeid in collection}
         self.list = list()
 
-    def pytest_collectreport(self, report):
+    def pytest_runtest_logreport(self, report):
         self.list.append((report.nodeid, report.outcome))
         if report.nodeid in self.map.keys():
             self.map[report.nodeid] = report.outcome
@@ -77,11 +77,10 @@ def main():
         elif report is 'skipped':
             skipped += 1
 
-    print(failed, passed, skipped)
-
     for nodeid, outcome in testing_plugin.list:
         print(nodeid, outcome)
     print(len(testing_plugin.list))
+    print(failed, passed, skipped)
     return
 
     
