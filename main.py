@@ -17,7 +17,7 @@ class CollectPlugin:
 
 class SkipAlarmPlugin:
     def __init__(self, collection: list) -> None:
-        self.map = {nodeid : 'passed' for nodeid in collection}
+        self.map = {nodeid : str() for nodeid in collection}
 
     def pytest_collectreport(self, report):
         if report.nodeid in self.map.keys():
