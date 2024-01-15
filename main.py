@@ -52,6 +52,10 @@ def main():
     #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
 
     test_functions = extract_test_functions()
+    sum = 0
+    for tc, skipped in test_functions:
+        sum += 1
+    print(sum)
     return
     
     omission = "/usr/local/lib/*,"
