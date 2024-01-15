@@ -4,25 +4,15 @@ import pytest
 
 
 global_counter = 1
-skip_flag = False
 
 
 class CollectPlugin:
     def __init__(self) -> None:
         self.collection = list()
 
-    def pytest_collection_modifyitems(self, items):
+    def pytest_collection_modifyitems(self, session, config, items):
         for item in items:
-            self.collection.append(item.nodeid)
-
-
-class SkipAlarmPlugin:
-    def pytest_runtest_makereport(self, item, call):
-        global skip_flag
-        # This hook is called to create a test report for each phase of a test
-        report = pytest.CollectReport(item.nodeid, call.when, call.outcome, call.longrepr)
-        if report.skipped:
-            skip_flag = True            
+            self.collection.append(item.nodeid, item.get_closer_marker("skip"))
 
 
 def extract_test_functions():
@@ -40,15 +30,9 @@ def runCoverage(test_target, number, omission):
 
 def run_pytest(test_function, omission):
     # Run a single test case using pytest
-    global global_counter, skip_flag
+    global global_counter
     print(f"Testing... >>> {test_function}")
     exitcode = pytest.main([test_function])
-    
-    if skip_flag:
-        print('ExitCode is SKIPPED')
-        skip_flag = False
-        return
-
     print(f"ExitCode is {exitcode}")
 
     if exitcode == 0:
@@ -65,12 +49,10 @@ def run_pytest(test_function, omission):
 
 
 def main():
-    global skip_flag
-    pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
-    print(f"Exitcode SKIPPED is {skip_flag}")
-    return
+    #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
 
     test_functions = extract_test_functions()
+    return
     
     omission = "/usr/local/lib/*,"
     for arg in sys.argv[1:]:
