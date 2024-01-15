@@ -81,6 +81,7 @@ def main():
 
     for nodeid, outcome in testing_plugin.list:
         print(nodeid, outcome)
+    print(len(testing_plugin.list))
     return
 
     
