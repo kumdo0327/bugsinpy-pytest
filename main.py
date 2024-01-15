@@ -17,12 +17,10 @@ class CollectPlugin:
 
 
 class SkipAlarmPlugin:
-    def pytest_runtest_protocol(self, item, nextitem):
+    def pytest_runtest_makereport(self, item, call):
         global skip_flag
-        reports = yield
         # Check if the test has been skipped
-        if reports.setup.outcome == "skipped" or reports.call.outcome == "skipped":
-            # Perform the action you want when a test is skipped
+        if call.when == 'call' and call.skipped:
             skip_flag = True            
 
 
