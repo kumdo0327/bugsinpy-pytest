@@ -19,7 +19,7 @@ class SkipAlarmPlugin:
     def __init__(self) -> None:
         self._list = list()
 
-    def pytest_runtest_logreport(self, report):
+    def pytest_collectreport(self, report):
         self._list.append(report)
 
 
