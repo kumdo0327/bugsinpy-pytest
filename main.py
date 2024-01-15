@@ -54,7 +54,8 @@ def main():
     test_functions = extract_test_functions()
     sum = 0
     for tc, skipped in test_functions:
-        sum += 1
+        if skipped:
+            sum += 1
     print(sum)
     return
     
