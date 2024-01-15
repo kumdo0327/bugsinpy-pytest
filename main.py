@@ -48,9 +48,9 @@ def run_pytest(test_function, omission):
 def main():
     test_functions = extract_test_functions(sys.argv[1])
     
-    omission = str()
+    omission = "/usr/local/lib/*,"
     for arg in sys.argv[1:]:
-        omission = omission + os.path.join(arg, '*.py,')
+        omission = omission + os.path.join(arg, '*,')
     if omission.endswith(','):
         omission = omission[:-1]
 
