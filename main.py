@@ -17,14 +17,9 @@ class CollectPlugin:
 
 
 class SkipAlarmPlugin:
-    def pytest_runtest_protocol(self, item, nextitem):
-        # Run the default test protocol and get the reports
+    def pytest_runtest_makereport(self, item, call):
         global skip_flag
-        outcomes = yield
-        setup, call, teardown = outcomes.get_result()
-        
-        # Check if the test has been skipped in any phase
-        if setup.skipped or call.skipped or teardown.skipped:
+        if call.when == 'call' and call.skipped:
             # Perform the action you want when a test is skipped
             skip_flag = True            
 
@@ -70,7 +65,7 @@ def run_pytest(test_function, omission):
 
 def main():
     global skip_flag
-    pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=SkipAlarmPlugin())
+    pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
     print(f"Exitcode SKIPPED is {skip_flag}")
     return
 
