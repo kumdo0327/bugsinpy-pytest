@@ -21,7 +21,7 @@ class SkipAlarmPlugin:
         self.list = list()
 
     def pytest_collectreport(self, report):
-        self.list = ((report.nodeid, report.outcome))
+        self.list.append((report.nodeid, report.outcome))
         if report.nodeid in self.map.keys():
             self.map[report.nodeid] = report.outcome
 
