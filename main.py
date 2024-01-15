@@ -16,15 +16,15 @@ class CollectPlugin:
 
 
 class SkipAlarmPlugin:
-    def __init__(self) -> None:
-        self._list = list()
+    def __init__(self, collection: list) -> None:
+        self.map = {nodeid : 'passed' for nodeid in collection}
 
     def pytest_collectreport(self, report):
-        self._list.append(report)
+        if report.nodeid in self.map.keys():
+            self.map[report.nodeid] = report.outcome
 
 
-def extract_test_functions():
-    plugin = CollectPlugin()
+def extract_test_functions(plugin):
     pytest.main(["--collect-only"], plugins=[plugin])
     return plugin.collection
 
@@ -58,14 +58,17 @@ def run_pytest(test_function, omission):
 
 def main():
     #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
-    plugin = SkipAlarmPlugin()
-    pytest.main([], plugins=[plugin])
-    for report in plugin._list:
-        print(report.outcome)
-    print(len(plugin._list))
+    collecting_plugin = CollectPlugin()
+    test_functions = extract_test_functions(collecting_plugin)
+
+    testing_plugin = SkipAlarmPlugin(collecting_plugin.collection)
+    pytest.main([], plugins=[testing_plugin])
+    for nodeid, report in testing_plugin.map:
+        print(nodeid, report.outcome)
+    print(len(testing_plugin._list))
     return
 
-    test_functions = extract_test_functions()
+    
     
     omission = "/usr/local/lib/*,"
     for arg in sys.argv[1:]:
