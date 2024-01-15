@@ -65,7 +65,7 @@ def main():
     pytest.main([], plugins=[testing_plugin])
     for nodeid, report in testing_plugin.map.items():
         print(nodeid, report)
-    print(len(testing_plugin._list))
+    print(len(testing_plugin.map))
     return
 
     
