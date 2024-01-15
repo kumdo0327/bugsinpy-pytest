@@ -49,6 +49,10 @@ def run_pytest(test_function, omission):
 
 
 def main():
+    print(f"Exitcode is {pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'])}")
+    return
+
+
     test_functions = extract_test_functions()
     
     omission = "/usr/local/lib/*,"
