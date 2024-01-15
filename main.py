@@ -1,7 +1,5 @@
 import sys
 import os
-import re
-import subprocess
 import pytest
 
 
@@ -23,6 +21,13 @@ def extract_test_functions(path):
     return plugin.collection
 
 
+def runCoverage(test_target, number, omission):
+    print(f'>> coverage run -m pytest {test_target}')
+    os.system(f'coverage run -m pytest {test_target}')
+    print(f'>> coverage json -o coverage/{number}/summary.json --omit="{omission}"')
+    os.system(f'coverage json -o coverage/{number}/summary.json --omit="{omission}"')
+
+
 def run_pytest(test_function, omission):
     # Run a single test case using pytest
     global global_counter
@@ -31,15 +36,13 @@ def run_pytest(test_function, omission):
     print(f"ExitCode is {exitcode}")
 
     if exitcode == 0:
-        subprocess.call(['coverage', 'run', '-m', 'pytest', test_function])
-        subprocess.call(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', f'--omit="{omission}"'])
+        runCoverage(test_function, global_counter, omission)
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
             f.write('passed')
         global_counter += 1
     
     elif exitcode == 1:
-        subprocess.call(['coverage', 'run', '-m', 'pytest', test_function])
-        subprocess.call(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', f'--omit="{omission}"'])
+        runCoverage(test_function, global_counter, omission)
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
             f.write('failed')
         global_counter += 1
