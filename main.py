@@ -4,23 +4,28 @@ import pytest
 
 
 global_counter = 1
+skip_flag = False
 
 
-class Plugin:
+class CollectPlugin:
     def __init__(self) -> None:
         self.collection = list()
 
     def pytest_collection_modifyitems(self, items):
         for item in items:
-            print()
-            print('> > > > > > > >', item)
-            print('> > > > > > > >', type(item))
-            print()
             self.collection.append(item.nodeid)
 
 
+class SkipAlarmPlugin:
+    def pytest_runtest_protocol(self, item, nextitem):
+        global skip_flag
+        reports = yield
+        if reports.setup.outcome == "skipped" or reports.call.outcome == "skipped":
+            skip_flag = True            
+
+
 def extract_test_functions():
-    plugin = Plugin()
+    plugin = CollectPlugin()
     pytest.main(["--collect-only"], plugins=[plugin])
     return plugin.collection
 
@@ -34,9 +39,15 @@ def runCoverage(test_target, number, omission):
 
 def run_pytest(test_function, omission):
     # Run a single test case using pytest
-    global global_counter
+    global global_counter, skip_flag
     print(f"Testing... >>> {test_function}")
     exitcode = pytest.main([test_function])
+    
+    if skip_flag:
+        print('ExitCode is SKIPPED')
+        skip_flag = False
+        return
+
     print(f"ExitCode is {exitcode}")
 
     if exitcode == 0:
