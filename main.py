@@ -19,11 +19,9 @@ class SkipAlarmPlugin:
     def __init__(self) -> None:
         self._list = list()
 
-    def pytest_collectreport(self, report):
+    def pytest_runtest_makereport(self, item, call):
+        report = yield
         self._list.append(report)
-        global global_counter
-        if hasattr(report, 'skipped'):
-            global_counter += 1
 
 
 def extract_test_functions():
@@ -64,7 +62,7 @@ def main():
     plugin = SkipAlarmPlugin()
     pytest.main([], plugins=[SkipAlarmPlugin()])
     for report in plugin._list:
-        print(report)
+        print(report.outcome)
     print(len(plugin._list))
     return
 
