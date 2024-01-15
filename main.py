@@ -63,8 +63,8 @@ def main():
     #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
     plugin = SkipAlarmPlugin()
     pytest.main([], plugins=[SkipAlarmPlugin()])
-    global global_counter
-    print(global_counter)
+    for report in plugin._list:
+        print(report)
     return
 
     test_functions = extract_test_functions()
