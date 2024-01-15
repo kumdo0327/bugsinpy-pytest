@@ -64,12 +64,12 @@ def run_pytest(test_function, omission):
 
 
 def main():
-    #print(f"Exitcode is {pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'])}")
-    #return
-
+    global skip_flag
+    pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=SkipAlarmPlugin())
+    print(f"Exitcode SKIPPED is {skip_flag}")
+    return
 
     test_functions = extract_test_functions()
-    return
     
     omission = "/usr/local/lib/*,"
     for arg in sys.argv[1:]:
