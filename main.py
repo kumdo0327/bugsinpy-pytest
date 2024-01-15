@@ -12,16 +12,13 @@ class CollectPlugin:
 
     def pytest_collection_modifyitems(self, session, config, items):
         for item in items:
-            self.collection.append(item.nodeid)
+            self.collection.append((item.nodeid, item.get_closest_marker("skip")))
 
 
 class SkipAlarmPlugin:
     def pytest_runtest_makereport(self, item, call):
-        report = yield
-        # Access the report after it has been generated
-        report = report.get_result()
-
-        if report.when == 'call' and report.skipped:
+        # This hook is called to create a report for each test phase
+        if call.when == 'call' and call.skipped:
             # Alarm if the test is skipped
             print(f"Alarm: Test skipped - {item.nodeid}")
 
@@ -62,9 +59,13 @@ def run_pytest(test_function, omission):
 def main():
     #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
 
-    pytest.main([], plugins=[SkipAlarmPlugin()])
-    return
     test_functions = extract_test_functions()
+    sum = 0
+    for _, skipped in test_functions:
+        if skipped:
+            sum += 1
+    print(sum)
+    return
     
     omission = "/usr/local/lib/*,"
     for arg in sys.argv[1:]:
