@@ -64,7 +64,7 @@ def main():
     testing_plugin = SkipAlarmPlugin(collecting_plugin.collection)
     pytest.main([], plugins=[testing_plugin])
     for nodeid, report in testing_plugin.map.items():
-        print(nodeid, report.outcome)
+        print(nodeid, report)
     print(len(testing_plugin._list))
     return
 
