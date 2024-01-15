@@ -17,8 +17,12 @@ class CollectPlugin:
 
 class SkipAlarmPlugin:
     def pytest_runtest_makereport(self, item, call):
-        report = (yield).get_result()
+        report = yield
+        # Access the report after it has been generated
+        report = report.get_result()
+
         if report.when == 'call' and report.skipped:
+            # Alarm if the test is skipped
             print(f"Alarm: Test skipped - {item.nodeid}")
 
 
