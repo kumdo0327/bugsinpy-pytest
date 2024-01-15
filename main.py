@@ -12,7 +12,7 @@ class CollectPlugin:
 
     def pytest_collection_modifyitems(self, session, config, items):
         for item in items:
-            self.collection.append(item.nodeid, item.get_closest_marker("skip"))
+            self.collection.append((item.nodeid, item.get_closest_marker("skip")))
 
 
 def extract_test_functions():
