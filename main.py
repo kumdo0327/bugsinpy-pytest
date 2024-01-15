@@ -59,7 +59,7 @@ def run_pytest(test_function, omission):
 def main():
     #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
     plugin = SkipAlarmPlugin()
-    pytest.main([], plugins=[SkipAlarmPlugin()])
+    pytest.main([], plugins=[plugin])
     for report in plugin._list:
         print(report.outcome)
     print(len(plugin._list))
