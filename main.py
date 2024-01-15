@@ -21,7 +21,6 @@ class SkipAlarmPlugin:
         global skip_flag
         # Check if the test has been skipped
         print(call.when)
-        print(call.skipped)
         if call.when == 'call' and call.skipped:
             skip_flag = True            
 
