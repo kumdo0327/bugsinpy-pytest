@@ -16,7 +16,11 @@ class CollectPlugin:
 
 
 class SkipAlarmPlugin:
+    def __init__(self) -> None:
+        self._list = list()
+
     def pytest_collectreport(report):
+        self._list.append(report)
         global global_counter
         if hasattr(report, 'skipped'):
             global_counter += 1
@@ -57,6 +61,7 @@ def run_pytest(test_function, omission):
 
 def main():
     #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
+    plugin = SkipAlarmPlugin()
     pytest.main([], plugins=[SkipAlarmPlugin()])
     global global_counter
     print(global_counter)
