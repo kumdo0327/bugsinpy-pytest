@@ -20,7 +20,7 @@ class SkipAlarmPlugin:
     def pytest_runtest_makereport(self, item, call):
         global skip_flag
         # Check if the test has been skipped
-        print(call.when)
+        print('> > > > >', call.when)
         if call.when == 'call' and call.skipped:
             skip_flag = True            
 
