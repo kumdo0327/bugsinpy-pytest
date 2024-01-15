@@ -63,9 +63,19 @@ def main():
 
     testing_plugin = SkipAlarmPlugin(collecting_plugin.collection)
     pytest.main([], plugins=[testing_plugin])
-    for nodeid, report in testing_plugin.map.items():
-        print(nodeid, report)
-    print(len(testing_plugin.map))
+
+    failed = 0
+    skipped = 0
+    passed = 0
+    for _, report in testing_plugin.map.items():
+        if report is 'passed':
+            passed += 1
+        elif report is 'failed':
+            failed += 1
+        elif report is 'skipped':
+            skipped += 1
+
+    print(failed, passed, skipped)
     return
 
     
