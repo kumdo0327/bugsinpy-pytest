@@ -65,6 +65,7 @@ def main():
     pytest.main([], plugins=[SkipAlarmPlugin()])
     for report in plugin._list:
         print(report)
+    print(len(plugin._list))
     return
 
     test_functions = extract_test_functions()
