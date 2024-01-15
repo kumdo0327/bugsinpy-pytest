@@ -13,8 +13,8 @@ class Plugin:
     def pytest_collection_modifyitems(self, items):
         for item in items:
             print()
-            print(item)
-            print(type(item))
+            print('> > > > > > > >', item)
+            print('> > > > > > > >', type(item))
             print()
             self.collection.append(item.nodeid)
 
