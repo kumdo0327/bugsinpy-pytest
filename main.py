@@ -17,8 +17,10 @@ class CollectPlugin:
 
 class SkipAlarmPlugin:
     def pytest_runtest_makereport(self, item, call):
-        report = pytest.hookimpl.call_runtest_hook(item, call)
-        if report.skipped:
+        # This hook is called to create a report for each test phase
+        report = yield
+        if call.when == 'call' and report.get_result().skipped:
+            # Alarm if the test is skipped
             print(f"Alarm: Test skipped - {item.nodeid}")
 
 
