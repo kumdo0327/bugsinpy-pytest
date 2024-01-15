@@ -15,7 +15,7 @@ class Plugin:
             self.collection.append(item.nodeid)
 
 
-def extract_test_functions(path):
+def extract_test_functions():
     plugin = Plugin()
     pytest.main(["--collect-only"], plugins=[plugin])
     return plugin.collection
@@ -49,7 +49,7 @@ def run_pytest(test_function, omission):
 
 
 def main():
-    test_functions = extract_test_functions(sys.argv[1])
+    test_functions = extract_test_functions()
     
     omission = "/usr/local/lib/*,"
     for arg in sys.argv[1:]:
