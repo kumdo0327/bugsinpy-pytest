@@ -33,9 +33,11 @@ def runPytest() -> list:
 def commandCoverage(test_target, omission, text):
     global global_counter
 
+    print(f'\n>> >> Pytest {global_counter}')
     exit_code = pytest.main([test_target])
     print(f'\n>> >> ExitCode is {exit_code}')
     if exit_code == 0 or exit_code == 1:
+
         print(f'\n>> >> Run Coverage {global_counter} : "{test_target}"')
         subprocess.run(['coverage', 'run', '-m', 'pytest', test_target]).returncode
 
