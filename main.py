@@ -11,13 +11,11 @@ class SkipAlarmPlugin:
         self.map = dict()
 
     def pytest_runtest_logreport(self, report):
-        nodeid = report.nodeid.replace('[', '"[').replace(']', ']"')
-        
-        if nodeid in self.map.keys():
-            if report.outcome is 'failed' or report.outcome is 'skipped' and self.map[nodeid] is 'passed':
-                self.map[nodeid] = report.outcome
+        if report.nodeid in self.map.keys():
+            if report.outcome is 'failed' or report.outcome is 'skipped' and self.map[report.nodeid] is 'passed':
+                self.map[report.nodeid] = report.outcome
         else:
-            self.map[nodeid] = report.outcome
+            self.map[report.nodeid] = report.outcome
 
     def toList(self) -> list:
         return [(nodeid, report) for nodeid, report in self.map.items()]
@@ -30,8 +28,8 @@ def runPytest() -> list:
 
 
 def commandCoverage(test_target, number, omission):
-    print(f'>> coverage run -m pytest {test_target}')
-    os.system(f'coverage run -m pytest {test_target}')
+    print(f'>> coverage run -m pytest "{test_target}"')
+    os.system(f'coverage run -m pytest "{test_target}"')
     print(f'>> coverage json -o coverage/{number}/summary.json --omit="{omission}"')
     os.system(f'coverage json -o coverage/{number}/summary.json --omit="{omission}"')
 
