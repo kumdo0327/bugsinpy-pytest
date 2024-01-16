@@ -1,6 +1,7 @@
 import sys
 import os
 import pytest
+import subprocess
 
 
 global_counter = 1
@@ -28,10 +29,8 @@ def runPytest() -> list:
 
 
 def commandCoverage(test_target, number, omission):
-    print(f'>> coverage run -m pytest "{test_target}"')
-    os.system(f'coverage run -m pytest "{test_target}"')
-    print(f'>> coverage json -o coverage/{number}/summary.json --omit="{omission}"')
-    os.system(f'coverage json -o coverage/{number}/summary.json --omit="{omission}"')
+    print(f'>> >> {global_counter} : "{test_target}"')
+    subprocess.call(['coverage', 'run', '-m', 'pytest', f'"{test_target}";', 'coverage', 'json', '-o', f'coverage/{number}/summary.json', f'--omit="{omission}"'])
 
 
 def runCoverage(test_function, report, omission):
