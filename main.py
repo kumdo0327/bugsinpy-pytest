@@ -11,11 +11,13 @@ class SkipAlarmPlugin:
         self.map = dict()
 
     def pytest_runtest_logreport(self, report):
-        if report.nodeid in self.map.keys():
-            if report.outcome is 'failed' or report.outcome is 'skipped' and self.map[report.nodeid] is 'passed':
-                self.map[report.nodeid] = report.outcome
+        nodeid = report.nodeid.replace('[', '"[').replace(']', ']"')
+        
+        if nodeid in self.map.keys():
+            if report.outcome is 'failed' or report.outcome is 'skipped' and self.map[nodeid] is 'passed':
+                self.map[nodeid] = report.outcome
         else:
-            self.map[report.nodeid] = report.outcome
+            self.map[nodeid] = report.outcome
 
     def toList(self) -> list:
         return [(nodeid, report) for nodeid, report in self.map.items()]
