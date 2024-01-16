@@ -42,7 +42,7 @@ def commandCoverage(test_target, omission, text):
         subprocess.run(['coverage', 'run', '-m', 'pytest', test_target]).returncode
 
         print(f'\n>> >> Wrote Json {global_counter} : "{test_target}"')
-        subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', f'--omit="{omission}"'])
+        subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit', omission])
         
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
             f.write(text)
