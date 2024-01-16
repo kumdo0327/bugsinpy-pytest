@@ -26,9 +26,10 @@ class SkipAlarmPlugin:
             self.map[report.nodeid] = report.outcome
 
 
-def extract_test_functions(plugin):
-    pytest.main(["--collect-only"], plugins=[plugin])
-    return plugin.collection
+def extract_test_functions():
+    collecting_plugin = CollectPlugin()
+    pytest.main(["--collect-only"], plugins=[collecting_plugin])
+    return collecting_plugin.collection
 
 
 def runCoverage(test_target, number, omission):
@@ -60,11 +61,9 @@ def run_pytest(test_function, omission):
 
 def main():
     #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
-    collecting_plugin = CollectPlugin()
-    test_functions = extract_test_functions(collecting_plugin)
-
-    testing_plugin = SkipAlarmPlugin(collecting_plugin.collection)
-    pytest.main([], plugins=[testing_plugin])
+    test_functions = extract_test_functions()
+    testing_plugin = SkipAlarmPlugin(test_functions)
+    pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[testing_plugin])
 
     failed = 0
     skipped = 0
