@@ -6,15 +6,6 @@ import pytest
 global_counter = 1
 
 
-class CollectPlugin:
-    def __init__(self) -> None:
-        self.collection = list()
-
-    def pytest_collection_modifyitems(self, session, config, items):
-        for item in items:
-            self.collection.append(item.nodeid)
-
-
 class SkipAlarmPlugin:
     def __init__(self) -> None:
         self.map = dict()
@@ -26,73 +17,50 @@ class SkipAlarmPlugin:
         else:
             self.map[report.nodeid] = report.outcome
 
+    def toList(self) -> list:
+        return [(nodeid, report) for nodeid, report in self.map.items()]
+    
 
-def extract_test_functions():
-    collecting_plugin = CollectPlugin()
-    pytest.main(["--collect-only"], plugins=[collecting_plugin])
-    return collecting_plugin.collection
+def runPytest() -> list:
+    plugin = SkipAlarmPlugin()
+    pytest.main([], plugins=[plugin])
+    return plugin.toList()
 
 
-def runCoverage(test_target, number, omission):
+def commandCoverage(test_target, number, omission):
     print(f'>> coverage run -m pytest {test_target}')
     os.system(f'coverage run -m pytest {test_target}')
     print(f'>> coverage json -o coverage/{number}/summary.json --omit="{omission}"')
     os.system(f'coverage json -o coverage/{number}/summary.json --omit="{omission}"')
 
 
-def run_pytest(test_function, omission):
-    # Run a single test case using pytest
+def runCoverage(test_function, report, omission):
     global global_counter
-    print(f"Testing... >>> {test_function}")
-    exitcode = pytest.main([test_function])
-    print(f"ExitCode is {exitcode}")
-
-    if exitcode == 0:
-        runCoverage(test_function, global_counter, omission)
+    if report is 'skipped':
+        return
+    
+    if report is 'passed':
+        commandCoverage(test_function, global_counter, omission)
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
             f.write('passed')
         global_counter += 1
     
-    elif exitcode == 1:
-        runCoverage(test_function, global_counter, omission)
+    elif report is 'failed':
+        commandCoverage(test_function, global_counter, omission)
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
             f.write('failed')
         global_counter += 1
 
 
 def main():
-    #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
-    #test_functions = extract_test_functions()
-    plugin = SkipAlarmPlugin()
-    pytest.main([], plugins=[plugin])
-
-    failed = 0
-    skipped = 0
-    passed = 0
-    for _, report in plugin.map.items():
-        if report is 'passed':
-            passed += 1
-        elif report is 'failed':
-            failed += 1
-        elif report is 'skipped':
-            skipped += 1
-
-    for nodeid, report in plugin.map.items():
-        print(nodeid, report)
-    print(len(plugin.map))
-    print(failed, passed, skipped)
-    return
-
-    
-    
     omission = "/usr/local/lib/*,"
     for arg in sys.argv[1:]:
         omission = omission + os.path.join(arg, '*,')
     if omission.endswith(','):
         omission = omission[:-1]
 
-    for test_function in test_functions:
-        run_pytest(test_function, omission)
+    for test_function, report in runPytest():
+        runCoverage(test_function, report, omission)
 
 
 if __name__ == '__main__':
