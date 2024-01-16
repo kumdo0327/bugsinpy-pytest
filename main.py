@@ -21,10 +21,9 @@ class SkipAlarmPlugin:
         self.list = list()
 
     def pytest_runtest_logreport(self, report):
-        self.list.append((report.nodeid, report.outcome, report.when))
-        """if not report.nodeid in self.map.keys():
+        if report.when is 'setup':
+            self.list.append((report.nodeid, report.outcome))
             self.map[report.nodeid] = report.outcome
-            self.list.append((report.nodeid, report.outcome))"""
 
 
 def extract_test_functions():
