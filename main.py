@@ -33,6 +33,10 @@ def runPytest() -> list:
 def commandCoverage(test_target, omission, text):
     global global_counter
 
+    if global_counter <= 165:
+        global_counter += 1
+        return
+
     exit_code = pytest.main([test_target])
     print(f'\n>> >> ExitCode is {exit_code}')
     if exit_code == 0 or exit_code == 1:
