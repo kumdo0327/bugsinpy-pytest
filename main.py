@@ -61,8 +61,8 @@ def run_pytest(test_function, omission):
 
 def main():
     #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
-    test_functions = extract_test_functions()
-    testing_plugin = SkipAlarmPlugin(test_functions)
+    #test_functions = extract_test_functions()
+    testing_plugin = SkipAlarmPlugin(['tests/functional/test_bash.py::test_with_confirmation[proc0]'])
     pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[testing_plugin])
 
     failed = 0
