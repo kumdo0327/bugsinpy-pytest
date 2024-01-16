@@ -77,9 +77,9 @@ def main():
         elif report is 'skipped':
             skipped += 1
 
-    for nodeid, outcome in plugin.list:
-        print(nodeid, outcome)
-    print(len(plugin.list))
+    for nodeid, report in plugin.map.items():
+        print(nodeid, report)
+    print(len(plugin.map))
     print(failed, passed, skipped)
     return
 
