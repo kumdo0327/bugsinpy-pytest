@@ -76,8 +76,8 @@ def main():
         elif report is 'skipped':
             skipped += 1
 
-    for nodeid, outcome, when in testing_plugin.list:
-        print(nodeid, outcome, when)
+    for nodeid, outcome in testing_plugin.list:
+        print(nodeid, outcome)
     print(len(testing_plugin.list))
     print(failed, passed, skipped)
     return
