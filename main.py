@@ -17,13 +17,14 @@ class CollectPlugin:
 
 class SkipAlarmPlugin:
     def __init__(self, collection: list) -> None:
-        self.map = {nodeid : str() for nodeid in collection}
+        self.map = dict()
         self.list = list()
 
     def pytest_runtest_logreport(self, report):
-        self.list.append((report.nodeid, report.outcome))
-        if report.nodeid in self.map.keys():
+        self.list.append((report.nodeid, report.outcome, report.when))
+        """if not report.nodeid in self.map.keys():
             self.map[report.nodeid] = report.outcome
+            self.list.append((report.nodeid, report.outcome))"""
 
 
 def extract_test_functions():
@@ -76,8 +77,8 @@ def main():
         elif report is 'skipped':
             skipped += 1
 
-    for nodeid, outcome in testing_plugin.list:
-        print(nodeid, outcome)
+    for nodeid, outcome, when in testing_plugin.list:
+        print(nodeid, outcome, when)
     print(len(testing_plugin.list))
     print(failed, passed, skipped)
     return
