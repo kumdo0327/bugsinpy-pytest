@@ -22,35 +22,37 @@ class SkipAlarmPlugin:
         return [(nodeid, report) for nodeid, report in self.map.items()]
     
 
+
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
     pytest.main([], plugins=[plugin])
     return plugin.toList()
 
 
-def commandCoverage(test_target, number, omission):
-    print(f'>> >> Run Coverage {number} : "{test_target}"')
-    subprocess.run(['coverage', 'run', '-m', 'pytest', test_target])
-    print(f'>> >> Wrote Json {number} : "{test_target}"')
-    subprocess.run(['coverage', 'json', '-o', f'coverage/{number}/summary.json', f'--omit="{omission}"'])
+
+def commandCoverage(test_target, omission, text):
+    global global_counter
+
+    print(f'\n>> >> Run Coverage {global_counter} : "{test_target}"')
+    if subprocess.run(['coverage', 'run', '-m', 'pytest', test_target]).returncode is 0:
+
+        print(f'\n>> >> Wrote Json {global_counter} : "{test_target}"')
+        subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', f'--omit="{omission}"'])
+        
+        with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
+            f.write(text)
+        global_counter += 1
+
 
 
 def runCoverage(test_function, report, omission):
-    global global_counter
     if report is 'skipped':
         return
-    
     if report is 'passed':
-        commandCoverage(test_function, global_counter, omission)
-        with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
-            f.write('passed')
-        global_counter += 1
-    
+        commandCoverage(test_function, omission, 'passed')
     elif report is 'failed':
-        commandCoverage(test_function, global_counter, omission)
-        with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
-            f.write('failed')
-        global_counter += 1
+        commandCoverage(test_function, omission, 'failed')
+
 
 
 def main():
