@@ -16,7 +16,7 @@ class CollectPlugin:
 
 
 class SkipAlarmPlugin:
-    def __init__(self, collection: list) -> None:
+    def __init__(self) -> None:
         self.map = dict()
         self.list = list()
 
@@ -62,13 +62,13 @@ def run_pytest(test_function, omission):
 def main():
     #pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[SkipAlarmPlugin()])
     #test_functions = extract_test_functions()
-    testing_plugin = SkipAlarmPlugin(['tests/functional/test_bash.py::test_with_confirmation[proc0]'])
-    pytest.main(['tests/functional/test_bash.py::test_with_confirmation[proc0]'], plugins=[testing_plugin])
+    plugin = SkipAlarmPlugin()
+    pytest.main([], plugins=[plugin])
 
     failed = 0
     skipped = 0
     passed = 0
-    for _, report in testing_plugin.map.items():
+    for _, report in plugin.map.items():
         if report is 'passed':
             passed += 1
         elif report is 'failed':
@@ -76,9 +76,9 @@ def main():
         elif report is 'skipped':
             skipped += 1
 
-    for nodeid, outcome in testing_plugin.list:
+    for nodeid, outcome in plugin.list:
         print(nodeid, outcome)
-    print(len(testing_plugin.list))
+    print(len(plugin.list))
     print(failed, passed, skipped)
     return
 
