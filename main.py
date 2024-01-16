@@ -30,7 +30,7 @@ def runPytest() -> list:
 
 def commandCoverage(test_target, number, omission):
     print(f'>> >> Run coverage {number} : "{test_target}"')
-    subprocess.run(['coverage', 'run', '-m', 'pytest', test_target, ';'])
+    subprocess.run(['coverage', 'run', '-m', 'pytest', test_target])
     print(f'>> >> Wrote Json {number} : "{test_target}"')
     subprocess.run(['coverage', 'json', '-o', f'coverage/{number}/summary.json', f'--omit="{omission}"'])
 
