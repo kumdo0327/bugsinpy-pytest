@@ -18,11 +18,12 @@ class CollectPlugin:
 class SkipAlarmPlugin:
     def __init__(self) -> None:
         self.map = dict()
-        self.list = list()
 
     def pytest_runtest_logreport(self, report):
-        if report.when is 'setup':
-            self.list.append((report.nodeid, report.outcome))
+        if report.nodeid in self.map.keys():
+            if report.outcome is 'failed' or report.outcome is 'skipped' and self.map[report.nodeid] is 'passed':
+                self.map[report.nodeid] = report.outcome
+        else:
             self.map[report.nodeid] = report.outcome
 
 
