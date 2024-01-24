@@ -39,7 +39,7 @@ def commandCoverage(test_target, omission, text):
     if exit_code == 0 or exit_code == 1:
 
         print(f'\n>> >> Run Coverage {global_counter} : "{test_target}"')
-        subprocess.run(['coverage', 'run', '-m', 'pytest', test_target]).returncode
+        subprocess.run(['coverage', 'run', '-m', 'pytest', test_target])
 
         print(f'\n>> >> Wrote Json {global_counter} : "{test_target}"')
         subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit', omission])
