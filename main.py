@@ -13,7 +13,7 @@ class SkipAlarmPlugin:
 
     def pytest_runtest_logreport(self, report):
         if report.nodeid in self.map.keys():
-            if report.outcome is 'failed' or report.outcome is 'skipped' and self.map[report.nodeid] is 'passed':
+            if report.outcome == 'failed' or report.outcome == 'skipped' and self.map[report.nodeid] == 'passed':
                 self.map[report.nodeid] = report.outcome
         else:
             self.map[report.nodeid] = report.outcome
@@ -51,11 +51,11 @@ def commandCoverage(test_target, omission, text):
 
 
 def runCoverage(test_function, report, omission):
-    if report is 'skipped':
+    if report == 'skipped':
         return
-    if report is 'passed':
+    if report == 'passed':
         commandCoverage(test_function, omission, 'passed')
-    elif report is 'failed':
+    elif report == 'failed':
         commandCoverage(test_function, omission, 'failed')
 
 
