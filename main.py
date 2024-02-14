@@ -25,7 +25,7 @@ class SkipAlarmPlugin:
 
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
-    pytest.main(['tests', '--ignore==tests/test_multiprocessing.py'], plugins=[plugin])
+    pytest.main(['tests', '--ignore=tests/test_multiprocessing.py'], plugins=[plugin])
     return plugin.toList()
 
 
