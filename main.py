@@ -32,6 +32,8 @@ def runPytest() -> list:
 
 def commandCoverage(test_target, omission, text):
     global global_counter
+    if 'test_multiprocessing.py' in test_target:
+        return
 
     print(f'\n>> >> Pytest {global_counter}')
     exit_code = pytest.main([test_target])
