@@ -25,15 +25,13 @@ class SkipAlarmPlugin:
 
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
-    pytest.main(["tests"], plugins=[plugin])
+    pytest.main(['tests', '--ignore==tests/test_multiprocessing.py'], plugins=[plugin])
     return plugin.toList()
 
 
 
 def commandCoverage(test_target, omission, text):
     global global_counter
-    if 'test_multiprocessing.py' in test_target:
-        return
 
     print(f'\n>> >> Pytest {global_counter}')
     exit_code = pytest.main([test_target])
