@@ -25,8 +25,7 @@ class SkipAlarmPlugin:
 
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
-    print(sys.argv[1], '--ignore='+sys.argv[2] if len(sys.argv) > 2 else '',  ignorePackage())
-    pytest.main([sys.argv[1], '--ignore='+sys.argv[2] if len(sys.argv) > 2 else '',  ignorePackage()], plugins=[plugin])
+    pytest.main([sys.argv[1], '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
     return plugin.toList()
 
 
@@ -58,37 +57,6 @@ def runCoverage(test_function, report, omission):
         commandCoverage(test_function, omission, 'passed')
     elif report == 'failed':
         commandCoverage(test_function, omission, 'failed')
-
-
-
-def ignorePackage() -> str:
-    prohibition = ['mysql', 'sqlalchemy', 'prometheus_client', 'hypothesis', 'azure', 'moto', 'elasticsearch', 'requests_kerberos']
-    prohibited_files = str()
-
-    for root, _, files in os.walk('.'):
-        for file in files:
-            if file.endswith('.py'):
-                file_path = os.path.join(root, file)
-                if searchProhibition(file_path, prohibition):
-                    prohibited_files += f"--ignore={file_path} "
-    return prohibited_files
-
-
-
-def searchProhibition(file_path: str, prohibition: list) -> bool:
-    content = None
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            content = file.read()
-    except:
-        with open(file_path, 'r', encoding='utf-16') as file:
-            content = file.read()
-    
-    # Check if the prohibition is in the file content
-    for pkg in prohibition:
-        if f"import {pkg}" in content or f"from {pkg}" in content:
-            return True
-    return False
 
 
 
