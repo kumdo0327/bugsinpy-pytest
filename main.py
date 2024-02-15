@@ -33,15 +33,15 @@ def runPytest() -> list:
 def commandCoverage(test_target, omission, text):
     global global_counter
 
-    print(f'\n>> >> Pytest {global_counter}')
+    print(f'\n===> Pytest {global_counter}')
     exit_code = pytest.main([test_target])
-    print(f'\n>> >> ExitCode is {exit_code}')
+    print(f'\n===> ExitCode is {exit_code}')
     if exit_code == 0 or exit_code == 1:
 
-        print(f'\n>> >> Run Coverage {global_counter} : "{test_target}"')
+        print(f'\n===> Run Coverage {global_counter} : "{test_target}"')
         subprocess.run(['coverage', 'run', '-m', 'pytest', test_target])
 
-        print(f'\n>> >> Wrote Json {global_counter} : "{test_target}"')
+        print(f'\n===> Wrote Json {global_counter} : "{test_target}"')
         subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit', omission])
         
         with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
@@ -74,7 +74,7 @@ def ignorePackage() -> str:
 
 
 
-def searchProhibition(file_path: str, prohibition: list[str]) -> bool:
+def searchProhibition(file_path: str, prohibition: list) -> bool:
     content = None
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
