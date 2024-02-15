@@ -74,7 +74,7 @@ def ignorePackage() -> str:
 
 
 
-def searchProhibition(file_path: str, prohibition: list[str]) -> bool:
+def searchProhibition(file_path: str, prohibited_pkgs: list[str]) -> bool:
     content = None
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -84,7 +84,7 @@ def searchProhibition(file_path: str, prohibition: list[str]) -> bool:
             content = file.read()
     
     # Check if the prohibition is in the file content
-    for pkg in prohibition:
+    for pkg in prohibited_pkgs:
         if f"import {pkg}" in content or f"from {pkg}" in content:
             return True
     return False
