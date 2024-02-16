@@ -31,7 +31,7 @@ class SkipAlarmPlugin:
         p = 0
         s = 0
         failed_tcs = list()
-        for nodeid, report, report in self.map.items():
+        for nodeid, report in self.map.items():
             f += 1 if report == 'failed' else 0
             p += 1 if report == 'passed' else 0
             s += 1 if report == 'skipped' else 0
