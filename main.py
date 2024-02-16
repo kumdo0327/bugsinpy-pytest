@@ -5,7 +5,7 @@ import subprocess
 
 
 global_counter = 1
-timeout = 60
+timeout = 40
 
 
 class SkipAlarmPlugin:
@@ -16,7 +16,7 @@ class SkipAlarmPlugin:
     def pytest_runtest_logreport(self, report):
         if report.nodeid in self.map.keys():
             if report.outcome == 'failed':
-                if self.timeout_enable and 'Timeout' in str(report.longrepr):
+                if self.timeout_enable and 'Timeout' in str(report.longrepr) and report.duration > timeout - 1:
                     self.map[report.nodeid] = 'skipped'
                 else:
                     self.map[report.nodeid] = report.outcome
