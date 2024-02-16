@@ -5,7 +5,7 @@ import subprocess
 
 
 global_counter = 1
-timeout = 40
+timeout = 30
 
 
 class SkipAlarmPlugin:
@@ -30,11 +30,17 @@ class SkipAlarmPlugin:
         f = 0
         p = 0
         s = 0
-        for _, report in self.map.items():
+        failed_tcs = list()
+        for nodeid, report, report in self.map.items():
             f += 1 if report == 'failed' else 0
             p += 1 if report == 'passed' else 0
             s += 1 if report == 'skipped' else 0
+            if report == 'failed':
+                failed_tcs.append(nodeid)
+
         print(f"=== {f} failed, {p} passed, {s} skipped")
+        for nodeid in failed_tcs:
+            print('FAILED', nodeid)
         return [(nodeid, report) for nodeid, report in self.map.items()]
 
 
