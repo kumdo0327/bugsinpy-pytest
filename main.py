@@ -14,16 +14,16 @@ class SkipAlarmPlugin:
         self.timeout_enable = True
 
     def pytest_runtest_logreport(self, report):
-        if report.nodeid in self.map.keys():
-            if report.outcome == 'failed':
-                if self.timeout_enable and 'Timeout' in str(report.longrepr) and report.duration > timeout - 1:
-                    self.map[report.nodeid] = 'skipped'
-                else:
-                    self.map[report.nodeid] = report.outcome
+        if report.nodeid not in self.map.keys():
+            self.map[report.nodeid] = 'passed'
 
-            elif report.outcome == 'skipped' and self.map[report.nodeid] == 'passed':
+        if report.outcome == 'failed':
+            if self.timeout_enable and 'Timeout' in str(report.longrepr) and report.duration > timeout - 1:
+                self.map[report.nodeid] = 'skipped'
+            else:
                 self.map[report.nodeid] = report.outcome
-        else:
+
+        elif report.outcome == 'skipped' and self.map[report.nodeid] == 'passed':
             self.map[report.nodeid] = report.outcome
 
     def toList(self) -> list:
@@ -38,7 +38,7 @@ class SkipAlarmPlugin:
             if report == 'failed':
                 failed_tcs.append(nodeid)
 
-        print(f"=== {f} failed, {p} passed, {s} skipped")
+        print(f"=== {f} failed, {p} passed, {s} skipped ===")
         for nodeid in failed_tcs:
             print('FAILED', nodeid)
         return [(nodeid, report) for nodeid, report in self.map.items()]
