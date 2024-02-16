@@ -5,6 +5,7 @@ import subprocess
 
 
 global_counter = 1
+timeout = 60
 
 
 class SkipAlarmPlugin:
@@ -33,7 +34,7 @@ class SkipAlarmPlugin:
 
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
-    pytest.main([sys.argv[1], '--timeout=60', '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
+    pytest.main([sys.argv[1], f"--timeout={timeout}", '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
     return plugin.toList()
     # '--continue-on-collection-errors',
 
@@ -48,7 +49,7 @@ def commandCoverage(test_target, omission, text):
     if exit_code == 0 or exit_code == 1:
 
         print(f'\n===> Run Coverage {global_counter} : "{test_target}"')
-        subprocess.run(['coverage', 'run', '-m', 'pytest', test_target])
+        subprocess.run(['coverage', 'run', '-m', 'pytest', test_target, f"--timeout={timeout}"])
 
         print(f'\n===> Wrote Json {global_counter} : "{test_target}"')
         subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit', omission])
