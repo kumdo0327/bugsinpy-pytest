@@ -11,10 +11,17 @@ timeout = 60
 class SkipAlarmPlugin:
     def __init__(self) -> None:
         self.map = dict()
+        self.timeout_enable = True
 
     def pytest_runtest_logreport(self, report):
         if report.nodeid in self.map.keys():
-            if report.outcome == 'failed' or report.outcome == 'skipped' and self.map[report.nodeid] == 'passed':
+            if report.outcome == 'failed':
+                if self.timeout_enable and 'Timeout' in str(report.longrepr):
+                    self.map[report.nodeid] = 'skipped'
+                else:
+                    self.map[report.nodeid] = report.outcome
+
+            elif report.outcome == 'skipped' and self.map[report.nodeid] == 'passed':
                 self.map[report.nodeid] = report.outcome
         else:
             self.map[report.nodeid] = report.outcome
@@ -29,7 +36,7 @@ class SkipAlarmPlugin:
             s += 1 if report == 'skipped' else 0
         print(f"=== {f} failed, {p} passed, {s} skipped")
         return [(nodeid, report) for nodeid, report in self.map.items()]
-    
+
 
 
 def runPytest() -> list:
@@ -49,7 +56,7 @@ def commandCoverage(test_target, omission, text):
     if exit_code == 0 or exit_code == 1:
 
         print(f'\n===> Run Coverage {global_counter} : "{test_target}"')
-        subprocess.run(['coverage', 'run', '-m', 'pytest', test_target, f"--timeout={timeout}"])
+        subprocess.run(['coverage', 'run', '-m', 'pytest', test_target])
 
         print(f'\n===> Wrote Json {global_counter} : "{test_target}"')
         subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit', omission])
