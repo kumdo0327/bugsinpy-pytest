@@ -14,7 +14,7 @@ class SkipAlarmPlugin:
     def pytest_collection_modifyitems(session, config, items):
         for item in items:
             if item.get_marker('timeout') is None:
-                item.add_marker(pytest.mark.timeout(120))
+                item.add_marker(pytest.mark.timeout(60))
 
     def pytest_runtest_logreport(self, report):
         if report.nodeid in self.map.keys():
