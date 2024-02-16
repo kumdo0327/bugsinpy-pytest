@@ -11,11 +11,6 @@ class SkipAlarmPlugin:
     def __init__(self) -> None:
         self.map = dict()
 
-    def pytest_collection_modifyitems(session, config, items):
-        for item in items:
-            if item.get_marker('timeout') is None:
-                item.add_marker(pytest.mark.timeout(60))
-
     def pytest_runtest_logreport(self, report):
         if report.nodeid in self.map.keys():
             if report.outcome == 'failed' or report.outcome == 'skipped' and self.map[report.nodeid] == 'passed':
@@ -38,8 +33,9 @@ class SkipAlarmPlugin:
 
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
-    pytest.main([sys.argv[1], '--continue-on-collection-errors', '--ignore=lib/matplotlib/tests/test_determinism.py', '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
+    pytest.main([sys.argv[1], '--ignore=lib/matplotlib/tests/test_determinism.py', '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
     return plugin.toList()
+    # '--continue-on-collection-errors',
 
 
 
