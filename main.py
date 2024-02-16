@@ -11,6 +11,11 @@ class SkipAlarmPlugin:
     def __init__(self) -> None:
         self.map = dict()
 
+    def pytest_collection_modifyitems(session, config, items):
+        for item in items:
+            if item.get_marker('timeout') is None:
+                item.add_marker(pytest.mark.timeout(120))
+
     def pytest_runtest_logreport(self, report):
         if report.nodeid in self.map.keys():
             if report.outcome == 'failed' or report.outcome == 'skipped' and self.map[report.nodeid] == 'passed':
