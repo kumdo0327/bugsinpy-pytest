@@ -33,7 +33,7 @@ class SkipAlarmPlugin:
 
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
-    pytest.main([sys.argv[1], '--continue-on-collection-errors', '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
+    pytest.main([sys.argv[1], '--continue-on-collection-errors', '--ignore=lib/matplotlib/test_determinism.py', '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
     return plugin.toList()
 
 
