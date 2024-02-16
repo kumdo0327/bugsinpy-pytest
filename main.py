@@ -19,13 +19,21 @@ class SkipAlarmPlugin:
             self.map[report.nodeid] = report.outcome
 
     def toList(self) -> list:
+        f = 0
+        p = 0
+        s = 0
+        for _, report in self.map.items():
+            f += 1 if report.outcome == 'failed' else 0
+            p += 1 if report.outcome == 'passsed' else 0
+            s += 1 if report.outcome == 'skipped' else 0
+        print(f"=== {f} failed, {p} passed, {s} skipped")
         return [(nodeid, report) for nodeid, report in self.map.items()]
     
 
 
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
-    pytest.main([sys.argv[1], '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
+    pytest.main([sys.argv[1], '--continue-on-collection-errors', '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
     return plugin.toList()
 
 
