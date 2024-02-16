@@ -23,9 +23,9 @@ class SkipAlarmPlugin:
         p = 0
         s = 0
         for _, report in self.map.items():
-            f += 1 if report.outcome == 'failed' else 0
-            p += 1 if report.outcome == 'passsed' else 0
-            s += 1 if report.outcome == 'skipped' else 0
+            f += 1 if report == 'failed' else 0
+            p += 1 if report == 'passsed' else 0
+            s += 1 if report == 'skipped' else 0
         print(f"=== {f} failed, {p} passed, {s} skipped")
         return [(nodeid, report) for nodeid, report in self.map.items()]
     
