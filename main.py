@@ -125,6 +125,11 @@ def runCoverage(test_function, report, omission):
 
 
 def main():
+    global timeout
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'timeout.txt', 'r')) as f:
+        print(os.path.dirname(os.path.realpath(__file__)))
+        timeout = float(f.read().strip())
+
     omission = "/usr/local/lib/*,"
     for arg in sys.argv[1:]:
         omission = omission + os.path.join(arg, '*,')
