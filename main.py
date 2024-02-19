@@ -12,10 +12,10 @@ timeout = 30
 class BaseState:
     def __init__(self):
         outcome: str
-    def newState(self, report: str):
-        if report == 'passed':
+    def newState(self, report):
+        if report.outcome == 'passed':
             return self
-        elif report == 'skipped':
+        elif report.outcome == 'skipped':
             return self._caseSkipped()
         else:
             if 'Timeout' in str(report.longrepr) and report.duration > timeout - 1:
