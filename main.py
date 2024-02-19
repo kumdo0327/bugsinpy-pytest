@@ -80,7 +80,7 @@ class SkipAlarmPlugin:
             if report.getReport() == 'failed':
                 failed_tcs.append(nodeid)
 
-        print(f"=== {f} failed, {p} passed, {s} skipped, {len(self.map)} total ===")
+        print(f"\n=== {f} failed, {p} passed, {s} skipped, {len(self.map)} total ===")
         for nodeid in failed_tcs:
             print('FAILED', nodeid)
         return [(nodeid, report.getReport()) for nodeid, report in self.map.items()]
@@ -89,8 +89,8 @@ class SkipAlarmPlugin:
 
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
-    print('\n=== pytest', sys.argv[1], f"--timeout={timeout}", '--ignore='+sys.argv[2] if len(sys.argv) > 2 else '')
-    pytest.main([sys.argv[1], f"--timeout={timeout}", '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
+    print('\n=== pytest', f"--timeout={timeout}", '--ignore='+sys.argv[2] if len(sys.argv) > 2 else '', sys.argv[1])
+    pytest.main(args=[f"--timeout={timeout}", '--ignore='+sys.argv[2] if len(sys.argv) > 2 else '', sys.argv[1]], plugins=[plugin])
     return plugin.toList()
     # '--continue-on-collection-errors',
 
@@ -100,7 +100,7 @@ def commandCoverage(test_target, omission, text):
     global global_counter
 
     print(f'\n===> Pytest {global_counter}')
-    exit_code = pytest.main([test_target])
+    pytest.main([test_target])
 
     print(f'\n===> Run Coverage {global_counter} : "{test_target}"')
     subprocess.run(['coverage', 'run', '-m', 'pytest', test_target])
