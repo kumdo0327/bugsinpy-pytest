@@ -90,7 +90,7 @@ class SkipAlarmPlugin:
 def runPytest() -> list:
     plugin = SkipAlarmPlugin()
     print('\n=== pytest', sys.argv[1], f"--timeout={timeout}", '--ignore='+sys.argv[2] if len(sys.argv) > 2 else '')
-    pytest.main(['-k', sys.argv[1]+'/', f"--timeout={timeout}", '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
+    pytest.main([sys.argv[1], f"--timeout={timeout}", '--ignore='+sys.argv[2] if len(sys.argv) > 2 else ''], plugins=[plugin])
     return plugin.toList()
     # '--continue-on-collection-errors',
 
