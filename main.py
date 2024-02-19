@@ -5,7 +5,7 @@ import subprocess
 
 
 global_counter = 1
-timeout = 30
+timeout: float = float('inf')
 
 
 
