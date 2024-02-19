@@ -66,7 +66,7 @@ class SkipAlarmPlugin:
     def pytest_runtest_logreport(self, report):
         if report.nodeid not in self.map.keys():
             self.map[report.nodeid] = PassedState()
-        self.map[report.nodeid] = self.map[report.nodeid].newState(report.nodeid)
+        self.map[report.nodeid] = self.map[report.nodeid].newState(report)
 
     def toList(self) -> list:
         f = 0
