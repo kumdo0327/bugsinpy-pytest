@@ -13,16 +13,15 @@ class BaseState:
     def __init__(self):
         outcome: str
     def newState(self, report: str):
-        match report:
-            case 'passed':
-                return self
-            case 'skipped':
-                return self._caseSkipped()
-            case 'failed':
-                if 'Timeout' in str(report.longrepr) and report.duration > timeout - 1:
-                    return self._caseTimeout()
-                else:
-                    return self._caseFailed()
+        if report == 'passed':
+            return self
+        elif report == 'skipped':
+            return self._caseSkipped()
+        else:
+            if 'Timeout' in str(report.longrepr) and report.duration > timeout - 1:
+                return self._caseTimeout()
+            else:
+                return self._caseFailed()
     def _caseSkipped(self):
         return self
     def _caseFailed(self):
