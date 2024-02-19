@@ -61,7 +61,7 @@ class TimeoutState(BaseState):
 
 class SkipAlarmPlugin:
     def __init__(self) -> None:
-        self.map = dict[str, BaseState]
+        self.map: dict[str, BaseState] = dict()
 
     def pytest_runtest_logreport(self, report):
         if report.nodeid not in self.map.keys():
