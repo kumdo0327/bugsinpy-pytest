@@ -76,7 +76,7 @@ class SkipAlarmPlugin:
         for nodeid, report in self.map.items():
             f += 1 if report.getReport() == 'failed' else 0
             p += 1 if report.getReport() == 'passed' else 0
-            s += 1 if report.getReport() == 'skipped' or 'timeout' else 0
+            s += 1 if report.getReport() == 'skipped' or report.getReport() == 'timeout' else 0
             if report.getReport() == 'failed':
                 failed_tcs.append(nodeid)
 
@@ -117,7 +117,7 @@ def commandCoverage(test_target, omission, text):
 
 
 def runCoverage(test_function, report, omission):
-    if report == 'timeout' or 'skipped':
+    if report == 'timeout' or report == 'skipped':
         return
     if report == 'passed':
         commandCoverage(test_function, omission, 'passed')
