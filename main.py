@@ -10,8 +10,8 @@ timeout = 30
 
 
 class BaseState:
-    def __init__(self):
-        outcome: str
+    def getReport(self) -> str:
+        pass
     def newState(self, report):
         if report.outcome == 'passed':
             return self
@@ -30,8 +30,8 @@ class BaseState:
         return self
 
 class PassedState(BaseState):
-    def __init__(self):
-        outcome: str = 'passed'
+    def getReport(self) -> str:
+        return 'passed'
     def _caseSkipped(self) -> None:
         return SkippedState()
     def _caseFailed(self) -> None:
@@ -40,22 +40,22 @@ class PassedState(BaseState):
         return TimeoutState()
 
 class SkippedState(BaseState):
-    def __init__(self):
-        outcome: str = 'skipped'
+    def getReport(self) -> str:
+        return 'skipped'
     def _caseFailed(self) -> None:
         return FailedState()
     def _caseTimeout(self) -> None:
         return TimeoutState()
 
 class FailedState(BaseState):
-    def __init__(self):
-        outcome: str = 'failed'
+    def getReport(self) -> str:
+        return 'failed'
     def _caseTimeout(self) -> None:
         return TimeoutState()
 
 class TimeoutState(BaseState):
-    def __init__(self):
-        outcome: str = 'timeout'
+    def getReport(self) -> str:
+        return 'timeout'
 
 
 
@@ -74,16 +74,16 @@ class SkipAlarmPlugin:
         s = 0
         failed_tcs = list()
         for nodeid, report in self.map.items():
-            f += 1 if report.outcome == 'failed' else 0
-            p += 1 if report.outcome == 'passed' else 0
-            s += 1 if report.outcome == 'skipped' or 'timeout' else 0
-            if report.outcome == 'failed':
+            f += 1 if report.getReport() == 'failed' else 0
+            p += 1 if report.getReport() == 'passed' else 0
+            s += 1 if report.getReport() == 'skipped' or 'timeout' else 0
+            if report.getReport() == 'failed':
                 failed_tcs.append(nodeid)
 
         print(f"=== {f} failed, {p} passed, {s} skipped ===")
         for nodeid in failed_tcs:
             print('FAILED', nodeid)
-        return [(nodeid, report.outcome) for nodeid, report in self.map.items()]
+        return [(nodeid, report.getReport()) for nodeid, report in self.map.items()]
 
 
 
