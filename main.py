@@ -80,7 +80,7 @@ class SkipAlarmPlugin:
             if report.getReport() == 'failed':
                 failed_tcs.append(nodeid)
 
-        print(f"=== {f} failed, {p} passed, {s} skipped ===")
+        print(f"=== {f} failed, {p} passed, {s} skipped, {len(self.map)} total ===")
         for nodeid in failed_tcs:
             print('FAILED', nodeid)
         return [(nodeid, report.getReport()) for nodeid, report in self.map.items()]
