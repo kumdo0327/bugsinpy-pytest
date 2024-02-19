@@ -18,7 +18,7 @@ class BaseState:
         elif report.outcome == 'skipped':
             return self._caseSkipped()
         else:
-            if 'Timeout' in str(report.longrepr) and report.duration > timeout - 1:
+            if 'Timeout' in str(report.longrepr) and report.duration > timeout - 0.1:
                 return self._caseTimeout()
             else:
                 return self._caseFailed()
