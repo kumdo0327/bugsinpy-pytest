@@ -5,7 +5,7 @@ import subprocess
 
 
 global_counter = 1
-timeout: int = -1
+timeout: float = float('inf')
 
 
 
@@ -18,7 +18,7 @@ class BaseState:
         elif report.outcome == 'skipped':
             return self._caseSkipped()
         else:
-            if 'Timeout' in str(report.longrepr) and report.duration > float(timeout) - 0.1:
+            if 'Timeout' in str(report.longrepr) and report.duration > timeout - 0.1:
                 return self._caseTimeout()
             else:
                 return self._caseFailed()
@@ -131,7 +131,7 @@ def runCoverage(test_function, report, omission):
 def main():
     global timeout
     with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'timeout.txt'), 'r') as f:
-        timeout = int(f.read().strip())
+        timeout = float(f.read().strip())
 
     omission = "/usr/local/lib/*,"
     for arg in sys.argv[1:]:
