@@ -88,13 +88,11 @@ class SkipAlarmPlugin:
 
 
 def runPytest() -> list:
-    ignore = str()
-    for path in sys.argv[2:]:
-        ignore += f"--ignore={path} "
+    ignore: list[str] = [f"--ignore={path}" for path in sys.argv[2:]]
 
     plugin = SkipAlarmPlugin()
-    print('\n=== pytest', f"--timeout={timeout}", ignore)
-    pytest.main(args=[f"--timeout={timeout}", ignore], plugins=[plugin])
+    print('\n=== pytest', sys.argv[1], f"--timeout={timeout}", ignore)
+    pytest.main(args=[sys.argv[1], f"--timeout={timeout}"] + ignore, plugins=[plugin])
     return plugin.toList()
     # '--continue-on-collection-errors',
 
