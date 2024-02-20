@@ -90,7 +90,7 @@ class SkipAlarmPlugin:
 def runPytest() -> list:
     ignore = str()
     for path in sys.argv[2:]:
-        ignore += f"--ignore={path}"
+        ignore += f"--ignore={path} "
 
     plugin = SkipAlarmPlugin()
     print('\n=== pytest', sys.argv[1], f"--timeout={timeout}", ignore)
