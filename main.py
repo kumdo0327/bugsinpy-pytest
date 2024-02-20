@@ -102,17 +102,18 @@ def commandCoverage(test_target, omission, text):
     global global_counter
 
     print(f'\n===> Pytest {global_counter}')
-    pytest.main([test_target])
-
-    print(f'\n===> Run Coverage {global_counter} : "{test_target}"')
-    subprocess.run(['coverage', 'run', '-m', 'pytest', test_target])
-
-    print(f'\n===> Wrote Json {global_counter} : "{test_target}"')
-    subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit', omission])
+    exitcode = pytest.main([test_target])
     
-    with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
-        f.write(text)
-    global_counter += 1
+    if exitcode == 0 and text == 'passed' or exitcode == 1 and text == 'failed':
+        print(f'\n===> Run Coverage {global_counter} : "{test_target}"')
+        subprocess.run(['coverage', 'run', '-m', 'pytest', test_target])
+
+        print(f'\n===> Wrote Json {global_counter} : "{test_target}"')
+        subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit', omission])
+        
+        with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
+            f.write(text)
+        global_counter += 1
 
 
 
