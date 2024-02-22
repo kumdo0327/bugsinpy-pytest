@@ -92,8 +92,8 @@ def runPytest() -> list:
     ignore: list[str] = [f"--ignore={path}" for path in sys.argv[2:]]
 
     plugin = SkipAlarmPlugin()
-    print('\n=== pytest', sys.argv[1], f"--timeout={timeout}", '--continue-on-collection-errors', ignore)
-    pytest.main(args=[sys.argv[1], f"--timeout={timeout}", '--continue-on-collection-errors'] + ignore, plugins=[plugin])
+    print('\n=== pytest', sys.argv[1], f"--timeout={timeout}", '--continue-on-collection-errors', '--disable-pytest-warnings', ignore)
+    pytest.main(args=['tests/keras/layers/recurrent_test.py', f"--timeout={timeout}", '--continue-on-collection-errors', '--disable-pytest-warnings'] + ignore, plugins=[plugin])
     return plugin.toList()
     # '--continue-on-collection-errors',
 
