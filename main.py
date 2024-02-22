@@ -2,6 +2,7 @@ import sys
 import os
 import pytest
 import subprocess
+import shutil
 
 
 global_counter = 1
@@ -91,8 +92,8 @@ def runPytest() -> list:
     ignore: list[str] = [f"--ignore={path}" for path in sys.argv[2:]]
 
     plugin = SkipAlarmPlugin()
-    print('\n=== pytest', sys.argv[1], f"--timeout={timeout}", ignore)
-    pytest.main(args=[sys.argv[1], f"--timeout={timeout}"] + ignore, plugins=[plugin])
+    print('\n=== pytest', sys.argv[1], f"--timeout={timeout}", '--continue-on-collection-errors', ignore)
+    pytest.main(args=[sys.argv[1], f"--timeout={timeout}", '--continue-on-collection-errors'] + ignore, plugins=[plugin])
     return plugin.toList()
     # '--continue-on-collection-errors',
 
@@ -110,10 +111,13 @@ def commandCoverage(test_target, omission, text):
 
         print(f'\n===> Wrote Json {global_counter} : "{test_target}"')
         subprocess.run(['coverage', 'json', '-o', f'coverage/{global_counter}/summary.json', '--omit', omission])
-        
-        with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
-            f.write(text)
-        global_counter += 1
+
+        if os.path.exists(f'coverage/{global_counter}/summary.json'):
+            with open(f'coverage/{global_counter}/{global_counter}.test', 'w') as f:
+                f.write(text)
+            global_counter += 1
+        else:
+            shutil.rmtree(f'coverage/{global_counter}')
 
 
 
