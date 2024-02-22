@@ -93,7 +93,7 @@ def runPytest() -> list:
 
     plugin = SkipAlarmPlugin()
     print('\n=== pytest', sys.argv[1], f"--timeout={timeout}", '--continue-on-collection-errors', '--disable-pytest-warnings', ignore)
-    pytest.main(args=['tests/keras/layers/recurrent_test.py', f"--timeout={timeout}", '--continue-on-collection-errors', '--disable-pytest-warnings'] + ignore, plugins=[plugin])
+    pytest.main(args=['tests/keras/layers/recurrent_test.py::test_implementation_mode[LSTM]', f"--timeout={timeout}", '--continue-on-collection-errors', '--disable-pytest-warnings'] + ignore, plugins=[plugin])
     return plugin.toList()
     # '--continue-on-collection-errors',
 
